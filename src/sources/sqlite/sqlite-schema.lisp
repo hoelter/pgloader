@@ -241,8 +241,10 @@
                                   pg-fkey)))))
              (if (and fkey from to)
                  (progn
-                   (push-to-end from (fkey-columns fkey))
-                   (push-to-end to   (fkey-foreign-columns fkey)))
+                   ;; Fix sourced from https://github.com/Redlinkk/pgloader/commit/4af028c347f654c76468ab00a704ad88ff407458#diff-1c9eca8d6e3eb12a42d37aaa30609886baa28ba5fb94268d2add0baac16019c5R245
+                   ;; Related PR https://github.com/dimitri/pgloader/pull/1531
+                   (push-to-end (apply-identifier-case from) (fkey-columns fkey))
+                   (push-to-end (apply-identifier-case to)   (fkey-foreign-columns fkey)))
 
                  ;; it might be INCLUDING/EXCLUDING clauses that make it we
                  ;; don't have to care about the fkey definition, or it
